@@ -5,17 +5,18 @@ on:
   schedule:
     - cron: "0 11 * * *"
 
-permissions: {}
+permissions:
+  contents: write
 
 env:
-  GIT_EMAIL: ${{ vars.GIT_EMAIL }}
-  GIT_NAME: ${{ vars.GIT_NAME }}
+  GIT_EMAIL: ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
+  GIT_NAME: ${{ vars.GIT_NAME || 'github-actions[bot]' }}
 
-  BRANCH_PREVIOUS: ${{ vars.BRANCH_PREVIOUS }}
-  BRANCH_RELEASE: ${{ vars.BRANCH_RELEASE }}
-  BRANCH_STAGING: ${{ vars.BRANCH_STAGING }}
+  BRANCH_PREVIOUS: ${{ vars.BRANCH_PREVIOUS || github.ref_name }}
+  BRANCH_RELEASE: ${{ vars.BRANCH_RELEASE || github.ref_name }}
+  BRANCH_STAGING: ${{ vars.BRANCH_STAGING || github.ref_name }}
 
-  BASE_COMMIT: ${{ vars.BASE_COMMIT }}
+  BASE_COMMIT: ${{ vars.BASE_COMMIT || 'Compile FrogPilot' }}
 
   TZ: UTC
 
@@ -36,7 +37,7 @@ jobs:
           sparse-checkout: |
             .github
             common
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
 
       - name: Promote scheduled staging release
         shell: bash
